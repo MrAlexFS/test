@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../test"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python-envs.defaultEnvManager": "ms-python.python:system",
+		"liveServer.settings.multiRootWorkspaceName": "Front_FaceId"
+	}
+}
