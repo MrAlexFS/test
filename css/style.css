@@ -129,7 +129,10 @@ body{
 
 
 .main{
-    padding: 80px 120px 0 120px;
+    background-image: url(/images/bg_logo.png);
+    background-position:50% 50%;
+    background-repeat: no-repeat;
+    padding: 80px 120px 100px 120px;
     display: flex;
     justify-content: space-between;
 }
@@ -178,6 +181,7 @@ body{
     height: 342px;
     background-color: #2C2B37;
     border-radius: 15px;
+    box-shadow: 0 0px 85px rgba(255, 255, 255, 0.5)
 }
 
 
@@ -309,4 +313,36 @@ body{
     height: 60px;
     background-color: #D9D9D9;
     border-radius: 15px;
+}
+
+
+.hr{
+    font-size: 2px;
+    content: "";
+	size: 1px;
+	color: #FFFFFF;
+	background-color: #FFFFFF;
+	width: 100%;
+    margin-bottom: 100px;
+}
+
+.Technical_Information{
+    padding: 0 120px 0 120px;
+}
+
+.main_information{
+    display: flex;
+    background-color: #D9D9D9;
+    height: 250px;
+    width: 100%;
+    border-radius: 15px;
+}
+
+.main_information_block{
+    border-color: #000000;
+    border: 1px solid;
+}
+
+.mib1{
+    width: 100px;
 }
