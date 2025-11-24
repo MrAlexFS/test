@@ -1,4 +1,5 @@
 
+from flask import Flask, render_template, Response
 import cv2
 import face_recognition
 import os
@@ -6,148 +7,198 @@ import numpy as np
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 from PIL import Image, ImageTk
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="face_recognition_models")
 
-DATA_DIR = "embeddings"
+# DATA_DIR = "embeddings"
 
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
+# if not os.path.exists(DATA_DIR):
+#     os.makedirs(DATA_DIR)
 
-# Функция для сохранения эмбеддинга
-def save_embedding(name, encoding):
-    filepath = os.path.join(DATA_DIR, f"{name}.npy")
-    np.save(filepath, encoding)
-    messagebox.showinfo("Успешно", f"Эмбеддинг сохранён: {filepath}")
-    update_user_list()
+# # Функция для сохранения эмбеддинга
+# def save_embedding(name, encoding):
+#     filepath = os.path.join(DATA_DIR, f"{name}.npy")
+#     np.save(filepath, encoding)
+#     messagebox.showinfo("Успешно", f"Эмбеддинг сохранён: {filepath}")
+#     update_user_list()
 
-# Функция загрузки всех сохранённых лиц
-def load_known_faces():
-    known_encodings = []
-    known_names = []
+# # Функция загрузки всех сохранённых лиц
+# def load_known_faces():
+#     known_encodings = []
+#     known_names = []
 
-    for file in os.listdir(DATA_DIR):
-        if file.endswith(".npy"):
-            path = os.path.join(DATA_DIR, file)
-            encoding = np.load(path)
-            known_encodings.append(encoding)
-            known_names.append(os.path.splitext(file)[0])
+#     for file in os.listdir(DATA_DIR):
+#         if file.endswith(".npy"):
+#             path = os.path.join(DATA_DIR, file)
+#             encoding = np.load(path)
+#             known_encodings.append(encoding)
+#             known_names.append(os.path.splitext(file)[0])
 
-    return known_encodings, known_names
+#     return known_encodings, known_names
 
-# Функция обновления списка пользователей
-def update_user_list():
-    users_list.delete(0, tk.END)
-    for file in os.listdir(DATA_DIR):
-        if file.endswith(".npy"):
-            users_list.insert(tk.END, os.path.splitext(file)[0])
+# # Функция обновления списка пользователей
+# def update_user_list():
+#     users_list.delete(0, tk.END)
+#     for file in os.listdir(DATA_DIR):
+#         if file.endswith(".npy"):
+#             users_list.insert(tk.END, os.path.splitext(file)[0])
 
-# Функция сканирования лица
-def scan_face():
-    video_capture = cv2.VideoCapture(0)
+# # Функция сканирования лица
+# def scan_face():
+#     video_capture = cv2.VideoCapture(0)
 
-    while True:
-        ret, frame = video_capture.read()
-        if not ret:
-            continue
+#     while True:
+#         ret, frame = video_capture.read()
+#         if not ret:
+#             continue
 
-        cv2.putText(frame, "press 'S' for save", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-        cv2.imshow("Face scan", frame)
+#         cv2.putText(frame, "press 'S' for save", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+#         cv2.imshow("Face scan", frame)
 
-        if cv2.waitKey(1) & 0xFF == ord('s'):
-            break
+#         if cv2.waitKey(1) & 0xFF == ord('s'):
+#             break
 
-    video_capture.release()
-    cv2.destroyAllWindows()
+#     video_capture.release()
+#     cv2.destroyAllWindows()
 
-    # Определение эмбеддинга
-    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    face_encodings = face_recognition.face_encodings(rgb_frame)
+#     # Определение эмбеддинга
+#     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#     face_encodings = face_recognition.face_encodings(rgb_frame)
 
-    if not face_encodings:
-        messagebox.showerror("Ошибка", "Лицо не найдено!")
-        return
+#     if not face_encodings:
+#         messagebox.showerror("Ошибка", "Лицо не найдено!")
+#         return
 
-    # Ввод имени
-    name = simpledialog.askstring("Сканирование", "Введите имя:")
-    if not name:
-        messagebox.showerror("Ошибка", "Имя не может быть пустым")
-        return
+#     # Ввод имени
+#     name = simpledialog.askstring("Сканирование", "Введите имя:")
+#     if not name:
+#         messagebox.showerror("Ошибка", "Имя не может быть пустым")
+#         return
 
-    # Сохранение эмбеддинга
-    save_embedding(name, face_encodings[0])
+#     # Сохранение эмбеддинга
+#     save_embedding(name, face_encodings[0])
 
-# Функция распознавания лиц
-def recognize_faces():
-    video_capture = cv2.VideoCapture(0)
-    known_encodings, known_names = load_known_faces()
+# # Функция распознавания лиц
+# def recognize_faces():
+#     video_capture = cv2.VideoCapture(0)
+#     known_encodings, known_names = load_known_faces()
 
-    while True:
-        ret, frame = video_capture.read()
-        if not ret:
-            continue
+#     while True:
+#         ret, frame = video_capture.read()
+#         if not ret:
+#             continue
 
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        face_locations = face_recognition.face_locations(rgb_frame)
-        face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
+#         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#         face_locations = face_recognition.face_locations(rgb_frame)
+#         face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
 
-        for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
-            name = "Unknown"
+#         for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+#             name = "Unknown"
 
-            if known_encodings:
-                distances = face_recognition.face_distance(known_encodings, face_encoding)
-                best_match_index = np.argmin(distances)
+#             if known_encodings:
+#                 distances = face_recognition.face_distance(known_encodings, face_encoding)
+#                 best_match_index = np.argmin(distances)
 
-                if distances[best_match_index] < 0.6:  # Порог для уверенности
-                    name = known_names[best_match_index]
+#                 if distances[best_match_index] < 0.6:  # Порог для уверенности
+#                     name = known_names[best_match_index]
 
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
-            cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+#             cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+#             cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
-        cv2.imshow("Распознавание лиц", frame)
+#         cv2.imshow("Распознавание лиц", frame)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+#         if cv2.waitKey(1) & 0xFF == ord('q'):
+#             break
 
-    video_capture.release()
-    cv2.destroyAllWindows()
-    # Функция удаления пользователя
-def delete_user():
-    selected = users_list.curselection()
-    if not selected:
-        messagebox.showerror("Ошибка", "Выберите пользователя для удаления")
-        return
+#     video_capture.release()
+#     cv2.destroyAllWindows()
+#     # Функция удаления пользователя
+# def delete_user():
+#     selected = users_list.curselection()
+#     if not selected:
+#         messagebox.showerror("Ошибка", "Выберите пользователя для удаления")
+#         return
 
-    name = users_list.get(selected[0])
-    filepath = os.path.join(DATA_DIR, f"{name}.npy")
+#     name = users_list.get(selected[0])
+#     filepath = os.path.join(DATA_DIR, f"{name}.npy")
 
-    if os.path.exists(filepath):
-        os.remove(filepath)
-        messagebox.showinfo("Удалено", f"Пользователь {name} удалён")
-        update_user_list()
-    else:
-        messagebox.showerror("Ошибка", "Файл не найден")
+#     if os.path.exists(filepath):
+#         os.remove(filepath)
+#         messagebox.showinfo("Удалено", f"Пользователь {name} удалён")
+#         update_user_list()
+#     else:
+#         messagebox.showerror("Ошибка", "Файл не найден")
 
 # Графический интерфейс
-root = tk.Tk()
-root.title("Распознавание лиц")
+# root = tk.Tk()
+# root.title("Распознавание лиц")
 
-frame = tk.Frame(root)
-frame.pack(pady=20)
+# frame = tk.Frame(root)
+# frame.pack(pady=20)
 
-label = tk.Label(frame, text="Выберите действие", font=("Arial", 14))
-label.pack()
+# label = tk.Label(frame, text="Выберите действие", font=("Arial", 14))
+# label.pack()
 
-scan_button = tk.Button(frame, text="Сканировать лицо", command=scan_face, font=("Arial", 12))
-scan_button.pack(pady=5)
+# scan_button = tk.Button(frame, text="Сканировать лицо", command=scan_face, font=("Arial", 12))
+# scan_button.pack(pady=5)
 
-recognize_button = tk.Button(frame, text="Распознать лица", command=recognize_faces, font=("Arial", 12))
-recognize_button.pack(pady=5)
+# recognize_button = tk.Button(frame, text="Распознать лица", command=recognize_faces, font=("Arial", 12))
+# recognize_button.pack(pady=5)
 
-delete_button = tk.Button(frame, text="Удалить выбранного пользователя", command=delete_user, font=("Arial", 12))
-delete_button.pack(pady=5)
+# delete_button = tk.Button(frame, text="Удалить выбранного пользователя", command=delete_user, font=("Arial", 12))
+# delete_button.pack(pady=5)
 
-# Список сохранённых пользователей
-users_list = tk.Listbox(root, height=10, width=30)
-users_list.pack(pady=10)
-update_user_list()
+# # Список сохранённых пользователей
+# users_list = tk.Listbox(root, height=10, width=30)
+# users_list.pack(pady=10)
+# update_user_list()
 
-root.mainloop()
+# root.mainloop()
+
+
+# Создаём Flask-приложение
+app = Flask(__name__)
+
+# Открываем камеру (0 — первая камера)
+camera = cv2.VideoCapture(0)
+
+# Проверяем, открылась ли камера
+if not camera.isOpened():
+    raise RuntimeError("Не удалось открыть камеру. Убедитесь, что она не занята другой программой.")
+
+def generate_video_stream():
+    """Генерирует MJPEG-поток кадров с камеры"""
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+        else:
+            # Преобразуем кадр в JPEG
+            ret, buffer = cv2.imencode('.jpg', frame)
+            if not ret:
+                continue
+            frame_bytes = buffer.tobytes()
+
+            # Отправляем как часть MJPEG
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(
+        generate_video_stream(),
+        mimetype='multipart/x-mixed-replace; boundary=frame'
+    )
+
+# Закрываем камеру при завершении (опционально, для graceful shutdown)
+import atexit
+def close_camera():
+    camera.release()
+atexit.register(close_camera)
+
+if __name__ == '__main__':
+    app.run(debug=True, host='127.0.0.1', port=5000)

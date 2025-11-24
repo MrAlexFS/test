@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Front_FaceID</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header__top">
+                <!-- Имя программы -->
+                <div class="name__container">
+                    <h1 class="name__title">Face Recognition System</h1>
+                </div>
+                <!-- Менюшка -->
+                <div class="header__top-menu">
+                    <nav class="header__menu-nav">
+
+                        <div class="search-box">
+                            <input type="text" id="search-input" placeholder="Search..." />
+                        </div>
+
+                        <button class="btn">Statistics</button>
+
+                    </nav>
+                </div>
+                <!-- Версия -->
+                <div class="version__container">
+                    <h1 class="version__title">             V 1.1 Open Beta</h1>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- Главная часть -->
+    <section class="main">
+        <!-- Инфа по БД  -->
+        <div class="main__container1">
+            <!-- Фото студента/преподавателя -->
+            <div class="main__container1-block1"></div>
+            <!-- Сходства Ф.И.О -->
+            <div class="main__container1-block2"></div>
+        </div>
+        <!-- Блок для статистики -->
+        <div class="main__container2">
+
+            <div class="main__container2-block1">
+
+                <div class="main__container2-block1--top">
+
+                    <div class="main__container2-block1--top1">
+                        <span class="main__container-span1"></span>
+                        <span class="main__container-span2"></span>
+                        <span class="main__container-span3"></span>
+                        <span class="main__container-span4"></span>
+                    </div>
+
+                    <div class="main__container2-block1--top2">
+                        <span class="people__head"></span>
+                        <span class="people__body"></span>
+                    </div>
+
+                    <div class="main__container2-block1--top3">
+                        <span class="main__container-span4"></span>
+                        <span class="main__container-span3"></span>
+                        <span class="main__container-span2"></span>
+                        <span class="main__container-span1"></span>
+                    </div>
+
+                </div>
+                <!-- Статистика (Кол.Людей) -->
+                <div class="main__container2-block1--bottom">
+                    <p>69</p>   
+                </div>
+
+            </div>
+        </div>
+        <!-- Блок для передачи видео потока и тестового поля -->
+        <div class="main__container3">
+            <!-- Видео поток -->
+            <div class="main__container3-block1 video-container">
+                    <img src="{{ url_for('video_feed') }}" alt="Видеопоток">
+            </div>
+            <!-- Текст -->
+            <div class="main__container4-block2"></div>
+        </div>
+
+    </section>
+
+    <div class="hr"> </div>
+    <!-- Тех. Информация -->
+    <section class="Technical_Information">
+        <div class="main_information">
+
+            <div class="main_information_block mib1">
+                <p>Service Data</p>
+                <div id="CPU Usage" class="CPU_Usage">CPU Usage: NN%</div>
+                <div id="RAM_Usage" class="RAM_Usage">RAM Usage: NN%</div>
+                <div id="CPU_Temp" class="CPU_Temp">CPU Temp: NN C</div>
+            </div>
+
+            <div class="main_information_block mib2">
+                <div id="HH-MM" class="HH-MM">ЧЧ:ММ</div>
+            </div>
+
+            <div class="main_information_block mib3">
+                <div class="information_block-container">
+                    <a href="" id="start" class="information_block-btn start">Start</a>
+                    <p>Запуск Комплекса Сканирования лиц</p>
+                </div>
+                <div class="information_block-container">
+                    <a href="" id="stop" class="information_block-btn stop">Stop</a>
+                    <p>Остановка Комплекса Сканирования лиц</p>
+                </div>
+                <div class="information_block-container">
+                    <a href="" id="restart" class="information_block-btn restart">Restart</a>
+                    <p>Перезапуск Комплекса Сканирования лиц</p>
+                </div>
+                <div class="information_block-container">
+                    <a href="" id="reboot" class="information_block-btn reboot">Reboot</a>
+                    <p>Перезапуск ПК</p>
+                </div>
+            </div>
+
+            <div class="main_information_block mib4">
+                <p>Othrer Informaiton</p>
+                <div id="indicator" class="indicator">
+                    <p id="info_indicator" class="info_indicator">OFF</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>
